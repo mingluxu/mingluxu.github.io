@@ -1,8 +1,6 @@
 ---
-title: "index"
-author: "Minglu Xu"
-date: "5/6/2021"
+title: "Welcome"
 output: html_document
 ---
 
-**Welcome!**
+**Projects and other fun stuff**
