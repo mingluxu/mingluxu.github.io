@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Blue Whales" />
+
+
+<title>Homework 10</title>
+
+<script src="site_libs/header-attrs-2.7/header-attrs.js"></script>
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/simplex.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.tab('show');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Minglu Xu</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="project.html">Project</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">Homework 10</h1>
+<h4 class="author">Blue Whales</h4>
+
+</div>
+
+
+<p><strong>Group Members:</strong> Arvind Bala, Ben Brikman, Jimena Velazquez, Minglu Xu, Eva Zhang</p>
+<div id="question-1" class="section level1">
+<h1>Question 1</h1>
+<p>We prepared the data for the network analysis by creating a separate edge and node list.</p>
+</div>
+<div id="question-2" class="section level1">
+<h1>Question 2</h1>
+<p><em>Calculate measures of centrality and similarity in networks depending on tie-type? Which tie type generates the most similar network in terms of introversion? Which tie type is the most dissimilar?</em></p>
+<p><strong>Network Visualization by Tie Type</strong></p>
+<p>We start our analysis by visualizing the overall network and the 5 networks filtered by the 5 tie types. It’s interesting to observe that networks based on tie type 3, 4, 5 have relatively more isolated nodes. These ties describes friendships and relations of asking/being asked for help. Perhaps remote learning has impacted people’s ability to make friends in the program.</p>
+<p><img src="project_files/figure-html/unnamed-chunk-2-1.png" width="672" /><img src="project_files/figure-html/unnamed-chunk-2-2.png" width="672" /><img src="project_files/figure-html/unnamed-chunk-2-3.png" width="672" /><img src="project_files/figure-html/unnamed-chunk-2-4.png" width="672" /><img src="project_files/figure-html/unnamed-chunk-2-5.png" width="672" /><img src="project_files/figure-html/unnamed-chunk-2-6.png" width="672" /></p>
+<p><strong>Network Centrality Measures by Tie Type</strong></p>
+<p>We then calculate measures centrality. We present results from centrality and edge density, since their results are easier to interpret.</p>
+<p>Among the networks based on 5 tie types, type 4 (I ask for help) has the highest measures of centrality. Type 5 (Asks me for help) has one of the lowest measures of centrality.</p>
+<pre><code>## Overall network centralization: 0.7737179</code></pre>
+<pre><code>## Overall network edge density: 0.4570513</code></pre>
+<pre><code>## Tie type 1 network centralization: 0.1615385</code></pre>
+<pre><code>## Tie type 1 network edge density: 0.09487179</code></pre>
+<pre><code>## Tie type 2 network centralization: 0.1942308</code></pre>
+<pre><code>## Tie type 2 network edge density: 0.08782051</code></pre>
+<pre><code>## Tie type 3 network centralization: 0.1442308</code></pre>
+<pre><code>## Tie type 3 network edge density: 0.08653846</code></pre>
+<pre><code>## Tie type 4 network centralization: 0.2955128</code></pre>
+<pre><code>## Tie type 4 network edge density: 0.1147436</code></pre>
+<pre><code>## Tie type 5 network centralization: 0.1576923</code></pre>
+<pre><code>## Tie type 5 network edge density: 0.07307692</code></pre>
+<p><strong>Network Similarity Measures by Tie Type</strong></p>
+<p>Next, we calculate assortativity to determine which network generates the most similar network, most similar network based on introversion, and most dissimilar network based on introversion.</p>
+<p>Overall, type 1 network (texted last week) has high measure of similarity.</p>
+<p>Type 1 network also generates the most similar network in terms of introversion, since it has the highest introversion-based assortativity value 0.1348994.</p>
+<p>Tie Type 3 (is my friend) is the most dissimilar network in terms of introversion since it has the lowest introversion-based assortativity value -0.02886641. This means people are friends with each other regardless of whether they are introverted or not.</p>
+<pre><code>## Overall network assortativity: 0.07348968</code></pre>
+<pre><code>## Overall network assortativity based on Extraversion/Introversion: 0.0348225</code></pre>
+<pre><code>## Tie type 1 network assortativity: 0.1228057</code></pre>
+<pre><code>## Tie type 1 network assortativity based on Extraversion/Introversion: 0.1348994</code></pre>
+<pre><code>## Tie type 2 network assortativity: -0.2405615</code></pre>
+<pre><code>## Tie type 2 network assortativity based on Extraversion/Introversion: -0.0183015</code></pre>
+<pre><code>## Tie type 3 network assortativity: 0.02809497</code></pre>
+<pre><code>## Tie type 3 network assortativity based on Extraversion/Introversion: -0.02886641</code></pre>
+<pre><code>## Tie type 4 network assortativity: -0.1294851</code></pre>
+<pre><code>## Tie type 4 network assortativity based on Extraversion/Introversion: 0.01731216</code></pre>
+<pre><code>## Tie type 5 network assortativity: -0.06440357</code></pre>
+<pre><code>## Tie type 5 network assortativity based on Extraversion/Introversion: 0.06063195</code></pre>
+</div>
+<div id="question-3" class="section level1">
+<h1>Question 3</h1>
+<p><em>Do introverts tend to be at the periphery while extroverts are in the center of the network?</em></p>
+<p>Note: 1 means introverted, 2 means middle ground, 3 means extroverted, and -1 means omitted response.</p>
+<p>First, we calculated the average of closeness and betweenness grouped by level of extroversion. Higher betweeness means more connected and higher closeness means nodes are more closely connected. Based on our very limited sample, introverted people in our class have high betweenness and low closeness, while extroverted people have low betweeness and slightly higher closeness.</p>
+<p>We also graphed the overall network, colored by level of extroversion. Based on the nodes of this graph, we can clearly see that, the very few people who identify themselves as extroverted (3) are in the center of the network. Middle-ground people (2) are typically just outside the very center of the network Out of the three introverted individuals (1), two are also quite in the center of the network, and only one of them is rather on the periphery.</p>
+<p>Overall, it is inconclusive if introverts tend to be on the periphery, while extroverts are more likely to be in the center. That said, our data set has very limited information, with half of the respondents omitting answers to this question and only a few people who identify themselves as either 1 or 3; the vast majority of people identified themselves as middle ground.</p>
+<pre><code>## # A tibble: 4 x 3
+##   Extraversion betweeness_mean closeness_mean
+## * &lt;chr&gt;                  &lt;dbl&gt;          &lt;dbl&gt;
+## 1 1                       39.5         0.0146
+## 2 2                       38.6         0.0145
+## 3 3                       24.9         0.0160
+## 4 &lt;NA&gt;                     0           0.0123</code></pre>
+<p><img src="project_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
