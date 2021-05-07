@@ -1,30 +1,289 @@
 ---
-title: "Project"
-author: "Minglu Xu"
-date: "5/6/2021"
+title: "Homework 10"
+author: "Blue Whales"
 output: html_document
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+#install.packages("network")
+#install.packages("igraph")
+library(readr)
+library(dplyr)
+library(tidyverse)
+library(network)
+library(igraph)
 ```
 
-## R Markdown
+**Group Members:** Arvind Bala, Ben Brikman, Jimena Velazquez, Minglu Xu, Eva Zhang
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+# Question 1
+We prepared the data for the network analysis by creating a separate edge and node list.
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+```{r, echo = F, include = F}
+# Load data, create nodelist and edgelist
 
-```{r cars}
-summary(cars)
+hw10_data <- read_csv("hw10_data.csv")
+hw10_data = hw10_data[-1,]
+hw10_data <- hw10_data[!is.na(hw10_data$Q2), ]
+
+nodelist <- select(hw10_data,Q2,Q4) %>% 
+  rename('ID' = Q2, 'Extraversion' = Q4) %>% 
+  transform(ID = as.numeric(ID)) %>% 
+  add_row(ID = 3, Extraversion = NA) %>% 
+  add_row(ID = 4, Extraversion = NA) %>%
+  add_row(ID = 8, Extraversion = NA) %>%
+  add_row(ID = 9, Extraversion = NA) %>%
+  add_row(ID = 10, Extraversion = NA) %>%
+  add_row(ID = 11, Extraversion = NA) %>%
+  add_row(ID = 12, Extraversion = NA) %>%
+  add_row(ID = 13, Extraversion = NA) %>%
+  add_row(ID = 14, Extraversion = NA) %>%
+  add_row(ID = 16, Extraversion = NA) %>%
+  add_row(ID = 19, Extraversion = NA) %>%
+  add_row(ID = 21, Extraversion = NA) %>%
+  add_row(ID = 22, Extraversion = NA) %>%
+  add_row(ID = 25, Extraversion = NA) %>%
+  add_row(ID = 26, Extraversion = NA) %>%
+  add_row(ID = 27, Extraversion = NA) %>%
+  add_row(ID = 29, Extraversion = NA) %>%
+  add_row(ID = 37, Extraversion = NA) %>%
+  add_row(ID = 39, Extraversion = NA) 
+
+edgelist <- select(hw10_data,-Q4)
+edgelist <- edgelist %>% 
+  pivot_longer(!Q2, names_to = 'in-tie', values_to = 'tie-num', values_drop_na = TRUE) %>% 
+  rename('out-tie' = Q2) %>% 
+  separate('tie-num', into = c("1", "2","3","4","5"), sep = ",") %>% 
+  pivot_longer('1':'5', names_to = 'number', values_to = 'tie-type', values_drop_na = TRUE) %>% 
+  select('out-tie', 'in-tie', 'tie-type') 
+edgelist$`in-tie` <- gsub("^.{0,3}", "", edgelist$`in-tie`)
 ```
 
-## Including Plots
+# Question 2
+*Calculate measures of centrality and similarity in networks depending on tie-type?
+Which tie type generates the most similar network in terms of introversion? 
+Which tie type is the most dissimilar?*
 
-You can also embed plots, for example:
+**Network Visualization by Tie Type**
 
-```{r pressure, echo=FALSE}
-plot(pressure)
+We start our analysis by visualizing the overall network and the 5 networks
+filtered by the 5 tie types. It's interesting to observe that
+networks based on tie type 3, 4, 5 have relatively more isolated nodes. These ties 
+describes friendships and relations of asking/being asked for help. Perhaps 
+remote learning has impacted people's ability to make friends in the program.
+
+```{r, echo = F}
+detach(package:network)
+newnetwork <- graph_from_data_frame(d = edgelist, vertices = nodelist, directed = TRUE)
+# Plot overall network of all ties
+plot(newnetwork, edge.arrow.size = 0.1, vertex.size = 3, main = "Overall Network")
+
+# Plot overall network varying node size based on number of ties
+#deg <- degree(newnetwork, mode="all")
+#plot(newnetwork, vertex.size=deg/10, edge.arrow.size = 0.1, main = "Overall Network")
+
+# filter by all 5 tie types
+edgelist_1 <- edgelist %>% filter(`tie-type` == 1)
+edgelist_2 <- edgelist %>% filter(`tie-type` == 2)
+edgelist_3 <- edgelist %>% filter(`tie-type` == 3)
+edgelist_4 <- edgelist %>% filter(`tie-type` == 4)
+edgelist_5 <- edgelist %>% filter(`tie-type` == 5)
+
+# Tie type 1 plot
+newnetwork_1 <- graph_from_data_frame(d = edgelist_1, vertices = nodelist, directed = TRUE)
+plot(newnetwork_1, edge.arrow.size = 0.1, vertex.size = 3, 
+     main = "Tie Type 1 Network - Messaged Last Week")
+
+# Tie type 2 plot
+newnetwork_2 <- graph_from_data_frame(d = edgelist_2, vertices = nodelist, directed = TRUE)
+plot(newnetwork_2, edge.arrow.size = 0.1, vertex.size = 3, 
+     main = "Tie Type 2 Network - Met During MBDS")
+
+# Tie type 3 plot
+newnetwork_3 <- graph_from_data_frame(d = edgelist_3, vertices = nodelist, directed = TRUE)
+plot(newnetwork_3, edge.arrow.size = 0.1, vertex.size = 3, 
+     main = "Tie Type 3 Network - Is My Friend")
+
+# Tie type 4 plot
+newnetwork_4 <- graph_from_data_frame(d = edgelist_4, vertices = nodelist, directed = TRUE)
+plot(newnetwork_4, edge.arrow.size = 0.1, vertex.size = 3, 
+     main = "Tie Type 4 Network - I Ask for Help")
+
+# Tie type 5 plot
+newnetwork_5 <- graph_from_data_frame(d = edgelist_5, vertices = nodelist, directed = TRUE)
+plot(newnetwork_5, edge.arrow.size = 0.1, vertex.size = 3, 
+     main = "Tie Type 5 Network - Asks Me for Help")
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+**Network Centrality Measures by Tie Type**
+
+We then calculate measures centrality. We present results from centrality and
+edge density, since their results are easier to interpret. 
+
+Among the networks based on 5 tie types, type 4 (I ask for help) has 
+the highest measures of centrality. Type 5 (Asks me for help) has
+one of the lowest measures of centrality. 
+
+```{r, include = F}
+nodelist2 <- nodelist
+# All centrality measures for overall network
+degree(newnetwork, mode="in")
+nodelist2['degree_closeness'] <- closeness(newnetwork, mode="all", weights=NA)
+nodelist2['degree_betweeness'] <- betweenness(newnetwork, directed=T, weights=NA)
+
+overall_centrality <- centr_degree(newnetwork, mode="in", normalized=T)
+overall_density <- edge_density(newnetwork, loops=F)
+
+# Centrality measures for tie1
+degree(newnetwork_1, mode="in")
+closeness(newnetwork_1, mode="all", weights=NA)
+betweenness(newnetwork_1, directed=T, weights=NA)
+centrality1 <- centr_degree(newnetwork_1, mode="in", normalized=T)
+density1 <- edge_density(newnetwork_1, loops=F)
+
+# Centrality measures for tie2
+degree(newnetwork_2, mode="in")
+closeness(newnetwork_2, mode="all", weights=NA)
+betweenness(newnetwork_2, directed=T, weights=NA)
+centrality2 <- centr_degree(newnetwork_2, mode="in", normalized=T)
+density2 <- edge_density(newnetwork_2, loops=F)
+
+# Centrality measures for tie3
+degree(newnetwork_3, mode="in")
+closeness(newnetwork_3, mode="all", weights=NA)
+betweenness(newnetwork_3, directed=T, weights=NA)
+centrality3 <- centr_degree(newnetwork_3, mode="in", normalized=T)
+density3 <- edge_density(newnetwork_3, loops=F)
+
+# Centrality measures for tie4
+degree(newnetwork_4, mode="in")
+closeness(newnetwork_4, mode="all", weights=NA)
+betweenness(newnetwork_4, directed=T, weights=NA)
+centrality4 <- centr_degree(newnetwork_4, mode="in", normalized=T)
+density4 <- edge_density(newnetwork_4, loops=F)
+
+# Centrality measures for tie5
+degree(newnetwork_5, mode="in")
+closeness(newnetwork_5, mode="all", weights=NA)
+betweenness(newnetwork_5, directed=T, weights=NA)
+centrality5 <- centr_degree(newnetwork_5, mode="in", normalized=T)
+density5 <- edge_density(newnetwork_5, loops=F)
+```
+
+
+```{r, echo = F}
+cat("Overall network centralization:", overall_centrality$centralization, "\n")
+cat("Overall network edge density:", overall_density, "\n")
+
+cat("Tie type 1 network centralization:", centrality1$centralization, "\n")
+cat("Tie type 1 network edge density:", density1, "\n")
+
+cat("Tie type 2 network centralization:", centrality2$centralization, "\n")
+cat("Tie type 2 network edge density:", density2, "\n")
+
+cat("Tie type 3 network centralization:", centrality3$centralization, "\n")
+cat("Tie type 3 network edge density:", density3, "\n")
+
+cat("Tie type 4 network centralization:", centrality4$centralization, "\n")
+cat("Tie type 4 network edge density:", density4, "\n")
+
+cat("Tie type 5 network centralization:", centrality5$centralization, "\n")
+cat("Tie type 5 network edge density:", density5, "\n")
+```
+
+
+**Network Similarity Measures by Tie Type**
+
+Next, we calculate assortativity to determine which network generates the most
+similar network, most similar network based on introversion, and most
+dissimilar network based on introversion.
+
+Overall, type 1 network (texted last week) has high measure of similarity. 
+
+Type 1 network also generates the most similar network in terms of introversion,
+since it has the highest introversion-based assortativity value 0.1348994.
+
+Tie Type 3 (is my friend) is the most dissimilar network in terms of introversion
+since it has the lowest introversion-based assortativity value -0.02886641.
+This means people are friends with each other regardless of whether they are
+introverted or not.
+
+
+```{r, echo = F}
+# Similarity measures of overall network
+node <- nodelist
+node[is.na(node)] <- -1
+net <- graph_from_data_frame(d = edgelist, vertices = node, directed = TRUE)
+cat("Overall network assortativity:", assortativity_degree(newnetwork, directed=T) , "\n")
+cat("Overall network assortativity based on Extraversion/Introversion:", 
+    assortativity(newnetwork, V(net)$Extraversion, directed=T) , "\n")
+
+cat("Tie type 1 network assortativity:", assortativity_degree(newnetwork_1, directed=T)  , "\n")
+cat("Tie type 1 network assortativity based on Extraversion/Introversion:", 
+    assortativity(newnetwork_1, V(net)$Extraversion, directed=T) , "\n")
+
+cat("Tie type 2 network assortativity:", assortativity_degree(newnetwork_2, directed=T)  , "\n")
+cat("Tie type 2 network assortativity based on Extraversion/Introversion:", 
+    assortativity(newnetwork_2, V(net)$Extraversion, directed=T) , "\n")
+
+cat("Tie type 3 network assortativity:", assortativity_degree(newnetwork_3, directed=T)  , "\n")
+cat("Tie type 3 network assortativity based on Extraversion/Introversion:", 
+    assortativity(newnetwork_3, V(net)$Extraversion, directed=T) , "\n")
+
+cat("Tie type 4 network assortativity:", assortativity_degree(newnetwork_4, directed=T)  , "\n")
+cat("Tie type 4 network assortativity based on Extraversion/Introversion:", 
+    assortativity(newnetwork_4, V(net)$Extraversion, directed=T) , "\n")
+
+cat("Tie type 5 network assortativity:", assortativity_degree(newnetwork_5, directed=T)  , "\n")
+cat("Tie type 5 network assortativity based on Extraversion/Introversion:", 
+    assortativity(newnetwork_5, V(net)$Extraversion, directed=T) , "\n")
+```
+
+
+# Question 3
+*Do introverts tend to be at the periphery while extroverts are in the center of the network?*
+
+Note: 1 means introverted, 2 means middle ground, 3 means extroverted, and -1 means
+omitted response.
+
+First, we calculated the average of closeness and betweenness grouped by level 
+of extroversion. Higher betweeness means more connected and higher closeness 
+means nodes are more closely connected. Based on our very limited sample,
+introverted people in our class have high betweenness and low closeness, while 
+extroverted people have low betweeness and slightly higher closeness.
+
+
+We also graphed the overall network, colored by level of extroversion.
+Based on the nodes of this graph, we can clearly see that, the very few people
+who identify themselves as extroverted (3) are in the center of the network. 
+Middle-ground people (2) are typically just outside the very center of the network 
+Out of the three introverted individuals (1), two are also quite in the center 
+of the network, and only one of them is rather on the 
+periphery. 
+
+Overall, it is  inconclusive if introverts tend to be on the periphery, while
+extroverts are more likely to be in the center.
+That said, our data set has very limited information, with
+half of the respondents omitting answers to this question and only a few people
+who identify themselves as either 1 or 3; the vast majority of people identified
+themselves as middle ground. 
+
+
+```{r, echo = F}
+# Approach 1
+extraversion_centrality <- nodelist2 %>% group_by(Extraversion) %>% 
+  summarize(betweeness_mean = mean(degree_betweeness), closeness_mean = mean(degree_closeness))
+print(extraversion_centrality) 
+```
+
+```{r, echo = F}
+# Approach 2
+plot(newnetwork,edge.arrow.size = 0.1,vertex.label=V(net)$Extraversion, 
+     vertex.color = nodelist2$Extraversion)
+#plot(subgraph(newnetwork, v = nodelist$ID), edge.arrow.size = 0.1, vertex.label=V(net)$Extraversion, vertex.color = nodelist2$Extraversion)
+```
+
+
+
+

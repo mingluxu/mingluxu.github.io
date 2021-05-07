@@ -1,3 +1,14 @@
----
-title: test site
----
+name: "Minglu's Website
+output_dir: "."
+navbar:
+  title: "Minglu Xu"
+  left:
+    - text: 'Home'
+      href: index.html
+    - text: "Project"
+      href: project.html
+      
+output:
+  html_document:
+    theme: simplex
+    highlight: textmate
